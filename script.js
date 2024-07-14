@@ -30,7 +30,9 @@ function createToggleButton() {
 }
 
 function getNumberFromFilename() {
-    return parseInt(window.location.pathname.match(/(\d+)\.html$/)[1], 10);
+    if (window.location.pathname.match(/(\d+)\.html$/))
+        return parseInt(window.location.pathname.match(/(\d+)\.html$/)[1], 10);
+    return 0;
 }
 
 function createNextButton() {
@@ -61,7 +63,11 @@ function saveLastViewedPage() {
     if (!currentPath.endsWith('index.html')) {
         const currentTime = new Date().toISOString();
         localStorage.setItem('lastViewedPage', currentPath);
-        localStorage.setItem('lastViewedTime', currentTime);
+        
+        // Save last viewed time for this specific page
+        let viewedTimes = JSON.parse(localStorage.getItem('viewedTimes')) || {};
+        viewedTimes[currentPath] = currentTime;
+        localStorage.setItem('viewedTimes', JSON.stringify(viewedTimes));
     }
 }
 
@@ -79,6 +85,27 @@ function highlightLastViewedPage() {
     }
 }
 
+
+// Function to display last viewed information on index page
+function displayLastViewedInfo() {
+    if (window.location.pathname.endsWith('index.html')) {
+        const lastViewedPage = localStorage.getItem('lastViewedPage');
+        const viewedTimes = JSON.parse(localStorage.getItem('viewedTimes')) || {};
+        
+        if (lastViewedPage && viewedTimes[lastViewedPage]) {
+            const lastViewedLink = document.querySelector(`a[href="${lastViewedPage.split('/').pop()}"]`);
+            if (lastViewedLink) {
+                const infoElement = document.createElement('span');
+                infoElement.className = 'last-viewed-info';
+                const lastViewedTime = new Date(viewedTimes[lastViewedPage]).toLocaleString();
+                infoElement.textContent = ` (Last viewed: ${lastViewedTime})`;
+                lastViewedLink.parentNode.appendChild(infoElement);
+                lastViewedLink.classList.add('last-viewed');
+                lastViewedLink.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    }
+}
 
 // Function to display last viewed time
 function displayLastViewedTime() {
@@ -154,18 +181,38 @@ function setInitialPageVisibility() {
 }
 
 
+// Function to display last viewed times for all pages
+function displayAllLastViewedTimes() {
+    if (window.location.pathname.endsWith('index.html')) {
+        const viewedTimes = JSON.parse(localStorage.getItem('viewedTimes')) || {};
+        const links = document.querySelectorAll('.grid-item a');
+        
+        links.forEach(link => {
+            const pagePath = '/' + link.getAttribute('href');
+            if (viewedTimes[pagePath]) {
+                const infoElement = document.createElement('span');
+                infoElement.className = 'viewed-time-info';
+                const viewedTime = new Date(viewedTimes[pagePath]).toLocaleString();
+                infoElement.textContent = ` (Viewed: ${viewedTime})`;
+                link.parentNode.appendChild(infoElement);
+            }
+        });
+    }
+}
+
 // Modify the existing init function
 function init() {
     createToggleButton();
-    createNextButton();
     initColorScheme();
-    saveLastViewedPage();
-    highlightLastViewedPage();
-    displayLastViewedTime();
     
     if (window.location.pathname.endsWith('index.html')) {
         createVisibilityToggleButton();
         setInitialPageVisibility();
+        displayLastViewedInfo();
+        displayAllLastViewedTimes();
+    } else {
+        saveLastViewedPage();
+        createNextButton();
     }
     
     // Listen for changes in color scheme preference
@@ -174,6 +221,7 @@ function init() {
         setColorScheme(newColorScheme);
     });
 }
+
 
 // Run initialization when DOM is loaded
 document.addEventListener('DOMContentLoaded', init);

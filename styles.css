@@ -77,3 +77,20 @@ body.dark-mode #mode-toggle {
     font-style: italic;
     color: #666;
 }
+
+
+.last-viewed-info,
+.viewed-time-info {
+    font-size: 0.8em;
+    color: #666;
+    margin-left: 10px;
+}
+
+.last-viewed {
+    font-weight: bold;
+}
+
+.last-viewed::before {
+    content: "➤ ";
+    color: #007bff;
+}
