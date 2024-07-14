@@ -6,10 +6,14 @@ body {
     max-width: 800px;
     margin: 0 auto;
     transition: background-color 0.3s, color 0.3s;
+    background-color: #ffffff;
+    color: #333333;
 }
 
+a { color: #369; }
+
 h1 {
-    color: #333;
+    color: #333333;
 }
 
 .next-chapter {
@@ -17,15 +21,32 @@ h1 {
 }
 
 /* Dark mode styles */
-@media (prefers-color-scheme: dark) {
-    body {
-        background-color: #222;
-        color: #f0f0f0;
-    }
+body.dark-mode {
+    background-color: #222222;
+    color: #f0f0f0;
+}
 
-    h1 {
-        color: #f0f0f0;
-    }
+body.dark-mode h1 {
+    color: #f0f0f0;
+}
+
+/* Toggle button styles */
+#mode-toggle {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    background-color: #f0f0f0;
+    color: #333333;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+body.dark-mode #mode-toggle {
+    background-color: #333333;
+    color: #f0f0f0;
 }
 
 /* Font size adjustment for mobile */

@@ -3,9 +3,11 @@ function setColorScheme(scheme) {
     if (scheme === 'dark') {
         document.body.classList.add('dark-mode');
         localStorage.setItem('color-scheme', 'dark');
+        document.getElementById('mode-toggle').textContent = '🌞';
     } else {
         document.body.classList.remove('dark-mode');
         localStorage.setItem('color-scheme', 'light');
+        document.getElementById('mode-toggle').textContent = '🌙';
     }
 }
 
@@ -21,11 +23,8 @@ function toggleColorScheme() {
 // Function to create toggle button
 function createToggleButton() {
     const button = document.createElement('button');
-    button.textContent = 'Toggle Light/Dark Mode';
-    button.style.position = 'fixed';
-    button.style.top = '10px';
-    button.style.right = '10px';
-    button.style.zIndex = '1000';
+    button.id = 'mode-toggle';
+    button.textContent = 'Switch to Dark Mode';
     button.addEventListener('click', toggleColorScheme);
     document.body.appendChild(button);
 }
@@ -46,8 +45,8 @@ function initColorScheme() {
 
 // Initialize everything
 function init() {
-    initColorScheme();
     createToggleButton();
+    initColorScheme();
     
     // Listen for changes in color scheme preference
     window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
