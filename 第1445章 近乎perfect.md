@@ -112,4 +112,4 @@
 
 
 
-[Next Chapter](./第1446章 计算位置.md)
+[Next Chapter](%E7%AC%AC1446%E7%AB%A0%20%E8%AE%A1%E7%AE%97%E4%BD%8D%E7%BD%AE.md)
